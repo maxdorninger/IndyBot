@@ -13,7 +13,7 @@ export const actions: Actions = {
 			return fail(400, { error: error.message, email });
 		}
 
-		redirect(303, '/');
+		redirect(303, '/dashboard');
 	},
 
 	google: async ({ locals: { supabase }, url }) => {

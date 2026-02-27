@@ -60,8 +60,14 @@
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item>
-					<LogOutIcon />
-					Log out
+					{#snippet child({ props })}
+						<form method="POST" action="/auth/logout">
+							<button type="submit" {...props}>
+								<LogOutIcon />
+								Log out
+							</button>
+						</form>
+					{/snippet}
 				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
