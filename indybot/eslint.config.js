@@ -35,5 +35,8 @@ export default defineConfig(
 				svelteConfig
 			}
 		}
+	},
+	{
+		ignores: ['node_modules/**', 'src/lib/components/ui/', '.svelte-kit/**', '**/.*']
 	}
 );

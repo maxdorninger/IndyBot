@@ -1,0 +1,3621 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "API For IndY",
+        "description": "\nI was söwa ned wos des eigentlich ois duat, is hoid fia IndY und so.\n\n### Features:\n- View and manage student data\n- Track special IndY entries\n- Manage room availability\n- Support for role-based access: Admin, Teacher, and Student\n\nVü Spaß damit. Bei Frogn bitte an buchi@ambuchberg.com. Danke!\n",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/student/": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "Get Students",
+                "description": "Retrieve all students and their class assignments from the `student` and `studentclassassociation` tables.\n\n- If the user is a **student**, only their own record is returned.\n- If the user is a **teacher** or **admin**, all students are returned with class association.",
+                "operationId": "get_students_student__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/student/{sid}": {
+            "get": {
+                "tags": [
+                    "student"
+                ],
+                "summary": "Get Student By Id",
+                "description": "Retrieve a specific student by SID from the `student` and `studentclassassociation` tables.\n\n- If the user is a **student**, their own SID must be used.\n- If the user is a **teacher** or **admin**, the SID of any student must be provided.\n\nReturns the student’s personal information and class association.",
+                "operationId": "get_student_by_id_student__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "Get Teachers",
+                "description": "Retrieve all teachers from the `teacher` table.\n\n- Available to users with roles **Admin** and **Teacher**.\n- Teachers can view the full list of teachers (e.g., for scheduling or contact purposes).",
+                "operationId": "get_teachers_teacher__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "Update Areaofexpertise",
+                "description": "Update the area of expertise of a teacher.",
+                "operationId": "update_areaOfExpertise_teacher__put",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "areaOfExpertise",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Areaofexpertise"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/teacher/{tid}": {
+            "get": {
+                "tags": [
+                    "teacher"
+                ],
+                "summary": "Get Teacher By Id",
+                "description": "Retrieve a specific teacher by TID from the `teacher` table.\n\n- If the user is a **teacher** or **admin**, they may specify any TID.",
+                "operationId": "get_teacher_by_id_teacher__tid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "summary": "Login",
+                "operationId": "login_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/refresh": {
+            "post": {
+                "summary": "Refresh Token",
+                "operationId": "refresh_token_refresh_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/protected/": {
+            "get": {
+                "summary": "Protected",
+                "operationId": "protected_protected__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/hour/": {
+            "get": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Get All Teacher Hours",
+                "description": "Retrieve all entries from the `indyhour` table, joined with the `teacher` table and \n`HourToTeacherAreaOfExpertiseAssociation` to include full teacher name and area of expertise.\n\nThe data is aggregated by (day, hour, teacher) and returned with optional expertise labels.",
+                "operationId": "get_all_teacher_hours_hour__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Create Hour Entry As Teacher",
+                "description": "Create a new `indyhour` entry as a logged-in teacher.\n\n- Requires Teacher role.\n- Uses the teacher's ID from the JWT token.\n- Fails if indySheetChangeAble is disabled in the `config` table.\n- Fails if the teacher is not found in the `teacher` table.",
+                "operationId": "create_hour_entry_as_teacher_hour__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Room"
+                        }
+                    },
+                    {
+                        "name": "consultation",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "title": "Consultation"
+                        }
+                    },
+                    {
+                        "name": "slimit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Slimit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Delete Hour As Teacher",
+                "operationId": "delete_hour_as_teacher_hour__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hour/admin": {
+            "post": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Create Hour Entry As Admin",
+                "description": "Create a new `indyhour` entry on behalf of a teacher as an Admin.\n\n- Requires Admin role.\n- Teacher ID must be explicitly provided in the URL path.\n- Fails if the teacher does not exist in the `teacher` table.",
+                "operationId": "create_hour_entry_as_admin_hour_admin_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teacher",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Teacher"
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Room"
+                        }
+                    },
+                    {
+                        "name": "consultation",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "title": "Consultation"
+                        }
+                    },
+                    {
+                        "name": "slimit",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 36,
+                            "title": "Slimit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Delete Hour As Admin",
+                "operationId": "delete_hour_as_admin_hour_admin_delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teacher",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Teacher"
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hour/{teacher}": {
+            "get": {
+                "tags": [
+                    "hour"
+                ],
+                "summary": "Get Hours Per Teacher",
+                "operationId": "get_hours_per_teacher_hour__teacher__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "teacher",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Teacher"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/": {
+            "get": {
+                "tags": [
+                    "entry"
+                ],
+                "summary": "Get Entries",
+                "description": "Retrieve all entries for the authenticated student.\n\n- Role: Schueler (Student)\n- Retrieves entries from the `entry` table based on the student's own ID.",
+                "operationId": "get_entries_entry__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/{sid}": {
+            "get": {
+                "tags": [
+                    "entry"
+                ],
+                "summary": "Get Entries For Student",
+                "description": "Retrieve all entries for a specific student by SID.\n\n- Role: Admin only\n- Returns entries from the `entry` table for the given student ID.",
+                "operationId": "get_entries_for_student_entry__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/date/": {
+            "get": {
+                "tags": [
+                    "entry"
+                ],
+                "summary": "Get Entries By Date",
+                "description": "Retrieve all entries for a given student and IndY date, grouped by hour and entry type.\n\n- If the user is a student, `sid` is automatically set to their ID.\n- Validates the provided date as an official IndY day.\n- Aggregates entries from the tables: `entrynormal`, `entryschoolevent`, `entryabsence`, and `entryfreeroom`.\n- Results are grouped by hour (3 and 4).",
+                "operationId": "get_entries_by_date_entry_date__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "sid",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/normal/": {
+            "post": {
+                "tags": [
+                    "entrynormal"
+                ],
+                "summary": "Add Entrynormal",
+                "description": "Create a new normal entry for the authenticated student.\n\n- Role: Schueler (Student)\n- Validates that the entry date is not in the past.\n- Checks teacher availability for the given hour and day.\n- Ensures the student limit for the teacher/hour is not exceeded.\n- Calls a function to create a general entry record.",
+                "operationId": "add_entrynormal_entry_normal__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Subject"
+                        }
+                    },
+                    {
+                        "name": "activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Activity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "entrynormal"
+                ],
+                "summary": "Get All Entrynormal Entries",
+                "description": "Retrieve all normal entries in the system.\n\n- Roles: Admin and Teacher\n- Returns all entries from the `entrynormal` table.",
+                "operationId": "get_all_entrynormal_entries_entry_normal__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/entry/normal/today": {
+            "get": {
+                "tags": [
+                    "entrynormal"
+                ],
+                "summary": "Get All Entrynormal For Today",
+                "description": "Retrieve all `entrynormal` entries for today.\n\n- Roles: Admin and Teacher\n- Includes the student’s class info from `studentclassassociation`.",
+                "operationId": "get_all_entrynormal_for_today_entry_normal_today_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/normal/{sid}": {
+            "get": {
+                "tags": [
+                    "entrynormal"
+                ],
+                "summary": "Get Entriesnormal By Sid",
+                "description": "Retrieve all normal entries for a specific student.\n\n- Role: Schueler (only for their own sid) or Admin/Teacher (any sid)\n- Returns all `entrynormal` records for the given student ID.",
+                "operationId": "get_entriesnormal_by_sid_entry_normal__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/freeroom/": {
+            "post": {
+                "tags": [
+                    "entryfreeroom"
+                ],
+                "summary": "Add Entryfreeroom",
+                "description": "Create a new free room entry for the authenticated student.\n\n- Role: Schueler (Student)\n- Calls the general `add_entry` function to create a base entry record.\n- Adds additional details specific to free room entries (subject, house, floor, activity).",
+                "operationId": "add_entryfreeroom_entry_freeroom__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Subject"
+                        }
+                    },
+                    {
+                        "name": "house",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "House"
+                        }
+                    },
+                    {
+                        "name": "floor",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Floor"
+                        }
+                    },
+                    {
+                        "name": "activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Activity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "entryfreeroom"
+                ],
+                "summary": "Get All Entryfreeroom Entries",
+                "description": "Retrieve all entries from the `entryfreeroom` table.\n\n- Accessible to **Admins** and **Teachers**.\n- Returns a complete list of free room entries for all students.",
+                "operationId": "get_all_entryfreeroom_entries_entry_freeroom__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/entry/freeroom/today": {
+            "get": {
+                "tags": [
+                    "entryfreeroom"
+                ],
+                "summary": "Get All Entryfreeroom For Today",
+                "description": "Retrieve all free room entries for today.\n\n- Roles: Admin and Teacher\n- Includes student class information from `studentclassassociation`.",
+                "operationId": "get_all_entryfreeroom_for_today_entry_freeroom_today_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/freeroom/{sid}": {
+            "get": {
+                "tags": [
+                    "entryfreeroom"
+                ],
+                "summary": "Get Entriesfreeroom By Sid",
+                "description": "Retrieve all free room entries for a specific student.\n\n- Role: Schueler (only for their own sid) or Admin/Teacher (any sid)\n- Returns all `entryfreeroom` records for the given student ID.",
+                "operationId": "get_entriesfreeroom_by_sid_entry_freeroom__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/absence/": {
+            "post": {
+                "tags": [
+                    "entryabsence"
+                ],
+                "summary": "Add Entryabsence",
+                "description": "Create a new absence entry for the authenticated student.\n\n- Role: Schueler (Student)\n- Calls the shared `add_entry` function with the absence flag.\n- Sets `entryPastPresent` flag based on whether the absence date is in the future.",
+                "operationId": "add_entryabsence_entry_absence__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "entryabsence"
+                ],
+                "summary": "Get All Entryabsence Entries",
+                "description": "Retrieve all entries from the `entryabsence` table.\n\n- Accessible to **Admins** and **Teachers**.\n- Returns all absence entries for all students.",
+                "operationId": "get_all_entryabsence_entries_entry_absence__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/entry/absence/today": {
+            "get": {
+                "tags": [
+                    "entryabsence"
+                ],
+                "summary": "Get All Entryabsence For Today",
+                "description": "Retrieve all absence entries for today.\n\n- Roles: Admin and Teacher\n- Includes student class info from `studentclassassociation`.",
+                "operationId": "get_all_entryabsence_for_today_entry_absence_today_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/absence/{sid}": {
+            "get": {
+                "tags": [
+                    "entryabsence"
+                ],
+                "summary": "Get Entriesabsence By Sid",
+                "description": "Retrieve all absence entries for a specific student by SID.\n\n- Returns all absence records for the given student ID.\n- Students must provide their own sid.",
+                "operationId": "get_entriesabsence_by_sid_entry_absence__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/entry/schoolevent/": {
+            "post": {
+                "tags": [
+                    "entryschoolevent"
+                ],
+                "summary": "Add Entryschoolevent",
+                "description": "Create a new school event entry for the authenticated student.\n\n- Role: Schueler (Student)\n- Calls the shared `add_entry` function.\n- Adds additional info like `tid` (teacher id) and optional `description`.",
+                "operationId": "add_entryschoolevent_entry_schoolevent__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    },
+                    {
+                        "name": "description",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Description"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "entryschoolevent"
+                ],
+                "summary": "Get All Schoolevent Entries",
+                "description": "Retrieve all entries from the `entryschoolevent` table.\n\n- Accessible to **Admins** and **Teachers**.\n- Returns a full list of school event entries.",
+                "operationId": "get_all_schoolevent_entries_entry_schoolevent__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/entry/schoolevent/today": {
+            "get": {
+                "tags": [
+                    "entryschoolevent"
+                ],
+                "summary": "Get All Entryschoolevent For Today",
+                "description": "Retrieve all school event entries for today.\n\n- Roles: Admin and Teacher\n- Includes related class info from `studentclassassociation`.",
+                "operationId": "get_all_entryschoolevent_for_today_entry_schoolevent_today_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/schoolevent/{sid}": {
+            "get": {
+                "tags": [
+                    "entryschoolevent"
+                ],
+                "summary": "Get Entriesschoolevent By Sid",
+                "description": "Retrieve all school event entries for a specific student by SID.\n\n- Role: Schueler can only access their own entries.\n- Returns entries from `entryschoolevent` for the given student.",
+                "operationId": "get_entriesschoolevent_by_sid_entry_schoolevent__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/validdays/": {
+            "get": {
+                "tags": [
+                    "validday"
+                ],
+                "summary": "Get Valid Days",
+                "description": "Retrieve all valid IndY days between two dates.\n\n- Valid days are Mondays, Wednesdays, and Fridays that pass IndY validation.\n- Returns a list of date + weekday name.",
+                "operationId": "get_valid_days_validdays__get",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Start Date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "End Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/validdays/status/": {
+            "get": {
+                "tags": [
+                    "validday"
+                ],
+                "summary": "Get Valid Days With Status",
+                "description": "Retrieve all valid IndY days between two dates including the student's status on each day.\n\n- **Role**: `Schueler` (Student)\n- Each returned date includes weekday name and student's status (e.g., entry type or \"No entries found\").",
+                "operationId": "get_valid_days_with_status_validdays_status__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Start Date"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "End Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/specialindy/": {
+            "get": {
+                "tags": [
+                    "specialindy"
+                ],
+                "summary": "Get Special Indy",
+                "description": "Retrieve all SpecialIndy sessions for a given date.\n\n- A `SpecialIndy` is a subject-specific or custom session offered on selected days by teachers.",
+                "operationId": "get_special_indy_specialindy__get",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Start Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "specialindy"
+                ],
+                "summary": "Create Special Indy As Teacher",
+                "description": "Create a SpecialIndy session for multiple dates as a teacher.\n\n- Requires active configuration to allow changes.\n- Replaces existing `specialindy`, `entrynormal`, and `entry` records for the same time slot.\n- Only users with role `Teacher` or `Admin` can use this endpoint.",
+                "operationId": "create_special_indy_as_teacher_specialindy__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Startdate"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Enddate"
+                        }
+                    },
+                    {
+                        "name": "specialAreaOfExpertise",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Specialareaofexpertise"
+                        }
+                    },
+                    {
+                        "name": "slimit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Slimit"
+                        }
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Room"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "specialindy"
+                ],
+                "summary": "Delete Special Indy Teacher",
+                "operationId": "delete_special_indy_teacher_specialindy__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "startdate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Startdate"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Enddate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/specialindy/{tid}": {
+            "post": {
+                "tags": [
+                    "specialindy"
+                ],
+                "summary": "Create Special Indy As Admin",
+                "description": "Admin-only endpoint to create a SpecialIndy session for a specific teacher.\n\n- Used when an Admin needs to set up sessions on behalf of a teacher.\n- Requires teacher ID in path.\n- Automatically cleans up overlapping `entrynormal` and `entry` records.",
+                "operationId": "create_special_indy_as_admin_specialindy__tid__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "startDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Startdate"
+                        }
+                    },
+                    {
+                        "name": "endDate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Enddate"
+                        }
+                    },
+                    {
+                        "name": "specialAreaOfExpertise",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Specialareaofexpertise"
+                        }
+                    },
+                    {
+                        "name": "slimit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Slimit"
+                        }
+                    },
+                    {
+                        "name": "room",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Room"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "specialindy"
+                ],
+                "summary": "Delete Special Indy Admin",
+                "operationId": "delete_special_indy_admin_specialindy__tid__delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    },
+                    {
+                        "name": "day",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Day"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "startdate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Startdate"
+                        }
+                    },
+                    {
+                        "name": "enddate",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Enddate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/studentcount/": {
+            "get": {
+                "tags": [
+                    "studentcount"
+                ],
+                "summary": "Student Count",
+                "description": "Returns the number of students assigned to each teacher for every hour on a specific IndY day.\n\n- Counts are based on `entrynormal` and `entryspecial` records.\n- Missing combinations (teacher + hour) will be returned with a student count of 0.",
+                "operationId": "student_count_studentcount__get",
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/subject/active": {
+            "get": {
+                "tags": [
+                    "subject"
+                ],
+                "summary": "Get Active Subjects",
+                "description": "Retrieve all active subjects (active = 1) from the `subject` table.",
+                "operationId": "get_active_subjects_subject_active_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/missing/": {
+            "get": {
+                "tags": [
+                    "missing"
+                ],
+                "summary": "Get Missing Entries",
+                "description": "Retrieve all missing indy entries for the currently logged-in student.\n\n- Requires the user to be authenticated as a `Schueler` (student).\n- Returns a list of date and hour pairs where the student has no Indy entries.",
+                "operationId": "get_missing_entries_missing__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/missing/{sid}": {
+            "get": {
+                "tags": [
+                    "missing"
+                ],
+                "summary": "Get Missing Entries By Id",
+                "description": "Retrieve missing Indy entries for a specific student ID.\n\n- Admins can use this to view missing entries for any student.\n- Students can only request their **own** data.\n- Raises 403 if a student attempts to access another student's data.",
+                "operationId": "get_missing_entries_by_id_missing__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign/{sid}": {
+            "post": {
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Sign",
+                "operationId": "sign_sign__sid__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Sid"
+                        }
+                    },
+                    {
+                        "name": "anwesend",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "title": "Anwesend"
+                        }
+                    },
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign/normal": {
+            "get": {
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Get Hours Normal",
+                "operationId": "get_hours_normal_sign_normal_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign/event": {
+            "get": {
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Get Hours Schoolevent",
+                "operationId": "get_hours_schoolevent_sign_event_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign/special": {
+            "get": {
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Get Hours Specialindy",
+                "operationId": "get_hours_specialIndy_sign_special_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign/all/normal": {
+            "get": {
+                "tags": [
+                    "sign"
+                ],
+                "summary": "Get All Normal",
+                "operationId": "get_all_normal_sign_all_normal_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kv/class": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Class Kv",
+                "operationId": "get_class_kv_kv_class_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/sign/normal": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Hours Normal Not Signed As Kv",
+                "operationId": "get_hours_normal_not_signed_as_kv_kv_sign_normal_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/sign/event": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Hours Not Signed Event As Kv",
+                "operationId": "get_hours_not_signed_event_as_kv_kv_sign_event_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/sign/special": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Hours Not Signed Special As Kv",
+                "operationId": "get_hours_not_signed_special_as_kv_kv_sign_special_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/sign/absence": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Hours Not Signed Absence As Kv",
+                "operationId": "get_hours_not_signed_absence_as_kv_kv_sign_absence_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/sign/freeroom": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Hours Free Room As Kv",
+                "operationId": "get_hours_free_room_as_kv_kv_sign_freeroom_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/missing": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Missing Entries As Kv",
+                "operationId": "get_missing_entries_as_kv_kv_missing_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/kv/{sid}": {
+            "post": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Sign",
+                "operationId": "sign_kv__sid__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Sid"
+                        }
+                    },
+                    {
+                        "name": "anwesend",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "boolean",
+                            "title": "Anwesend"
+                        }
+                    },
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/kv/statistics": {
+            "get": {
+                "tags": [
+                    "kv"
+                ],
+                "summary": "Get Statistics",
+                "operationId": "get_statistics_kv_statistics_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/report/": {
+            "get": {
+                "tags": [
+                    "report"
+                ],
+                "summary": "Get Own Report",
+                "description": "Retrieve the IndY report for the currently logged-in student.\n\n- **Role**: `Schueler` (Student)\n- Returns a list of all recorded IndY entries including date, hour, subject, etc.\n- Also includes statistics such as total entered hours, total possible hours, absences, and subject distribution.",
+                "operationId": "get_own_report_entry_report__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/report/{sid}": {
+            "get": {
+                "tags": [
+                    "report"
+                ],
+                "summary": "Get Report For Student",
+                "description": "Retrieve the IndY report for a specific student.\n\n- **Role**: `Teacher` or `Admin`\n- A Student has to provide his own **sid**.\n- Requires a valid `sid` (student ID) as path parameter.\n- Returns a comprehensive list of the student's entries and associated statistics.",
+                "operationId": "get_report_for_student_entry_report__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms/": {
+            "get": {
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "Get All Rooms",
+                "description": "Get a list of all rooms.\n\n- Returns all room entries from the `Room` table.",
+                "operationId": "get_all_rooms_rooms__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/rooms/available": {
+            "get": {
+                "tags": [
+                    "rooms"
+                ],
+                "summary": "Get Available Rooms",
+                "description": "Get a list of rooms that are currently available (not booked) for a specific date.\n\n- Role: Teacher or Admin required\n- Checks room usage in the `indyhour` and `specialIndy` tables.\n- Returns a filtered list of `Room` entries that are not in use on the given date.\n- Defaults to today's date if no date is provided.",
+                "operationId": "get_available_rooms_rooms_available_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "check_date",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Check Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/house/": {
+            "get": {
+                "tags": [
+                    "house"
+                ],
+                "summary": "Get Houses",
+                "description": "Returns all `house IDs`.",
+                "operationId": "get_houses_house__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/floor/": {
+            "get": {
+                "tags": [
+                    "floor"
+                ],
+                "summary": "Get Floors",
+                "description": "Returns all `floor IDs`.",
+                "operationId": "get_floors_floor__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/untis/students/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Students",
+                "description": "Loading students from untis and saving them to the database",
+                "operationId": "load_and_save_students_untis_students_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/untis/subjects/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Subjects",
+                "description": "Lädt Fächer aus Untis und speichert sie in die DB",
+                "operationId": "load_and_save_subjects_untis_subjects_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/untis/classes/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Classes",
+                "description": "Lädt Klassen des aktuellen Schuljahres aus Untis und speichert sie in die DB",
+                "operationId": "load_and_save_classes_untis_classes_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/untis/classesassociations/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Classes Associations",
+                "description": "Lädt Klassen des aktuellen Schuljahres aus Untis und speichert sie in die DB",
+                "operationId": "load_and_save_classes_associations_untis_classesassociations_load_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/untis/schoolyears/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Schoolyears",
+                "description": "Lädt alle Schuljahre aus Untis und speichert sie in die DB",
+                "operationId": "load_and_save_schoolyears_untis_schoolyears_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/untis/teachers/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Teachers",
+                "description": "Lädt Lehrer aus Untis",
+                "operationId": "load_and_save_teachers_untis_teachers_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/untis/holidays/load": {
+            "post": {
+                "tags": [
+                    "Untis"
+                ],
+                "summary": "Load And Save Holidays",
+                "operationId": "load_and_save_holidays_untis_holidays_load_post",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/teacher/absences/": {
+            "get": {
+                "tags": [
+                    "absences"
+                ],
+                "summary": "Get Teacher Absences",
+                "description": "Retrieve all teacher absences from the `teacherindyhourcancellations` table.\n\n- Available to users with roles **Admin** , **Teacher** and **Schueler**.\n- Returns a list starting from the current date.",
+                "operationId": "get_teacher_absences_teacher_absences__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/special/": {
+            "post": {
+                "tags": [
+                    "entryspecial"
+                ],
+                "summary": "Add Entryspecial",
+                "description": "Create a new special indy entry for the authenticated student.\n\n- Role: Schueler (Student)\n- Validates that the entry date is not in the past.\n- Checks teacher availability for the given hour and day.\n- Ensures the student limit for the teacher/hour is not exceeded.\n- Calls a function to create a general entry record.",
+                "operationId": "add_entryspecial_entry_special__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "indy_date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "title": "Indy Date"
+                        }
+                    },
+                    {
+                        "name": "hour",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hour"
+                        }
+                    },
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Tid"
+                        }
+                    },
+                    {
+                        "name": "subject",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Subject"
+                        }
+                    },
+                    {
+                        "name": "activity",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Activity"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "entryspecial"
+                ],
+                "summary": "Get All Special Entries",
+                "description": "Retrieve all normal entries in the system.\n\n- Roles: Admin and Teacher\n- Returns all entries from the `entrynormal` table.",
+                "operationId": "get_all_special_entries_entry_special__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/entry/special/today": {
+            "get": {
+                "tags": [
+                    "entryspecial"
+                ],
+                "summary": "Get All Special For Today",
+                "description": "Retrieve all `entrynormal` entries for today.\n\n- Roles: Admin and Teacher\n- Includes the student’s class info from `studentclassassociation`.",
+                "operationId": "get_all_special_for_today_entry_special_today_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/entry/special/{sid}": {
+            "get": {
+                "tags": [
+                    "entryspecial"
+                ],
+                "summary": "Get Entryspecial By Sid",
+                "description": "Retrieve all normal entries for a specific student.\n\n- Role: Schueler (only for their own sid) or Admin/Teacher (any sid)\n- Returns all `entrynormal` records for the given student ID.",
+                "operationId": "get_entryspecial_by_sid_entry_special__sid__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sid",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "anyOf": [
+                                {
+                                    "type": "integer"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "title": "Sid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Root",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_login_token_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "^password$"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_login_token_post"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "RefreshRequest": {
+                "properties": {
+                    "refresh_token": {
+                        "type": "string",
+                        "title": "Refresh Token"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "refresh_token"
+                ],
+                "title": "RefreshRequest"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}
