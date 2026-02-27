@@ -1,7 +1,9 @@
-<script>
+<script lang="ts">
 	import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
 	import SignupForm from '$lib/components/signup-form.svelte';
 	import { resolve } from '$app/paths';
+
+	let { form } = $props();
 </script>
 
 <div class="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
@@ -14,6 +16,6 @@
 			</div>
 			IndyBot
 		</a>
-		<SignupForm />
+		<SignupForm {form} />
 	</div>
 </div>
