@@ -9,6 +9,10 @@ export const actions: Actions = {
 		const confirmPassword = formData.get('confirm-password') as string;
 		const name = formData.get('name') as string;
 
+		if (!email || !password || !confirmPassword || !name) {
+			return fail(400, { error: 'All fields are required.', email, name });
+		}
+
 		if (password !== confirmPassword) {
 			return fail(400, { error: 'Passwords do not match.', email, name });
 		}

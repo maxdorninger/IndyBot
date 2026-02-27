@@ -7,6 +7,10 @@ export const actions: Actions = {
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
+		if (!email || !password) {
+			return fail(400, { error: 'Email and password are required.', email });
+		}
+
 		const { error } = await supabase.auth.signInWithPassword({ email, password });
 
 		if (error) {
