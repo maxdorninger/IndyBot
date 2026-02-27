@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import * as Avatar from '$lib/components/ui/avatar/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
@@ -54,14 +55,18 @@
 				<DropdownMenu.Separator />
 				<DropdownMenu.Group>
 					<DropdownMenu.Item>
-						<BadgeCheckIcon />
-						Account
+						{#snippet child({ props })}
+							<a href={resolve('/dashboard/settings')} {...props}>
+								<BadgeCheckIcon />
+								Account
+							</a>
+						{/snippet}
 					</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item>
 					{#snippet child({ props })}
-						<form method="POST" action="/auth/logout">
+						<form method="POST" action={resolve('/auth/logout')}>
 							<button type="submit" {...props}>
 								<LogOutIcon />
 								Log out
