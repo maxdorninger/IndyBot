@@ -151,7 +151,7 @@
 	</Card.Root>
 
 	<!-- Danger zone -->
-	<Card.Root class="background-destructive border-destructive">
+	<Card.Root class="border-destructive">
 		<Card.Header>
 			<Card.Title class="text-destructive">Danger zone</Card.Title>
 			<Card.Description>

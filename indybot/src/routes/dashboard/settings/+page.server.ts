@@ -1,5 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { supabaseAdmin } from '$lib/supabaseClient';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const {
@@ -71,7 +72,7 @@ export const actions: Actions = {
 
 		if (!user) return fail(400, { action: 'deleteAccount', error: 'Not authenticated.' });
 
-		const { error } = await supabase.auth.admin.deleteUser(user.id);
+		const { error } = await supabaseAdmin.auth.admin.deleteUser(user.id);
 
 		if (error) return fail(400, { action: 'deleteAccount', error: error.message });
 
