@@ -12,7 +12,9 @@
 
 	const expiresAt = $derived(data.expiresAt ? new Date(data.expiresAt) : null);
 	const expiresInDays = $derived(
-		expiresAt ? Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : null
+		expiresAt
+			? Math.max(0, Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+			: null
 	);
 	const isExpiringSoon = $derived(expiresInDays !== null && expiresInDays <= 5);
 </script>
@@ -107,13 +109,13 @@
 			{/if}
 			<form method="POST" action="?/saveCredentials" use:enhance class="flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
-					<Label for="username-b">IndY username</Label>
-					<Input id="username-b" name="username" type="text" autocomplete="username" required />
+					<Label for="username-a">IndY username</Label>
+					<Input id="username-a" name="username" type="text" autocomplete="username" required />
 				</div>
 				<div class="flex flex-col gap-2">
-					<Label for="password-b">IndY password</Label>
+					<Label for="password-a">IndY password</Label>
 					<Input
-						id="password-b"
+						id="password-a"
 						name="password"
 						type="password"
 						autocomplete="current-password"
@@ -155,13 +157,13 @@
 			{/if}
 			<form method="POST" action="?/saveTokenOnly" use:enhance class="flex flex-col gap-4">
 				<div class="flex flex-col gap-2">
-					<Label for="username-a">IndY username</Label>
-					<Input id="username-a" name="username" type="text" autocomplete="username" required />
+					<Label for="username-b">IndY username</Label>
+					<Input id="username-b" name="username" type="text" autocomplete="username" required />
 				</div>
 				<div class="flex flex-col gap-2">
-					<Label for="password-a">IndY password</Label>
+					<Label for="password-b">IndY password</Label>
 					<Input
-						id="password-a"
+						id="password-b"
 						name="password"
 						type="password"
 						autocomplete="current-password"
