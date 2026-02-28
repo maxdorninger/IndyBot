@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { supabaseAdmin } from '$lib/supabaseClient';
+import { supabaseAdmin } from '$lib/server/supabaseClient';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const {
@@ -16,12 +16,12 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 export const actions: Actions = {
 	updateProfile: async ({ request, locals: { supabase } }) => {
 		const formData = await request.formData();
-		const fullName = formData.get('full_name') as string;
+		let fullName = formData.get('full_name');
 
-		if (!fullName || fullName.trim() === '') {
+		if (typeof fullName !== 'string' || fullName.trim() === '') {
 			return fail(400, { action: 'updateProfile', error: 'Full name is required.' });
 		}
-
+		fullName = fullName.trim();
 		const { error } = await supabase.auth.updateUser({
 			data: { full_name: fullName }
 		});
@@ -32,11 +32,13 @@ export const actions: Actions = {
 
 	updateEmail: async ({ request, locals: { supabase }, url }) => {
 		const formData = await request.formData();
-		const email = formData.get('email') as string;
+		let email = formData.get('email');
 
-		if (!email || email.trim() === '') {
+		if (typeof email !== 'string' || email.trim() === '') {
 			return fail(400, { action: 'updateEmail', error: 'Email is required.' });
 		}
+
+		email = email.trim();
 
 		const { error } = await supabase.auth.updateUser(
 			{ email },
