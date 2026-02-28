@@ -10,11 +10,6 @@
 
 	// This is sample data.
 	const data = {
-		user: {
-			name: 'shadcn',
-			email: 'm@example.com',
-			avatar: '/avatars/shadcn.jpg'
-		},
 		navMain: [
 			{
 				title: 'Playground',
@@ -80,12 +75,12 @@
 			},
 			{
 				title: 'Settings',
-				url: '#',
+				url: '/dashboard/settings',
 				icon: Settings2Icon,
 				items: [
 					{
 						title: 'General',
-						url: '#'
+						url: '/dashboard/settings'
 					},
 					{
 						title: 'Team',
@@ -132,8 +127,11 @@
 	let {
 		ref = $bindable(null),
 		collapsible = 'icon',
+		user,
 		...restProps
-	}: ComponentProps<typeof Sidebar.Root> = $props();
+	}: ComponentProps<typeof Sidebar.Root> & {
+		user: { name: string; email: string; avatar: string };
+	} = $props();
 </script>
 
 <Sidebar.Root {collapsible} {...restProps}>
@@ -161,7 +159,7 @@
 		<NavProjects projects={data.projects} />
 	</Sidebar.Content>
 	<Sidebar.Footer>
-		<NavUser user={data.user} />
+		<NavUser {user} />
 	</Sidebar.Footer>
 	<Sidebar.Rail />
 </Sidebar.Root>
