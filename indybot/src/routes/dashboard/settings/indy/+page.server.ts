@@ -59,17 +59,17 @@ export const actions: Actions = {
 			return fail(400, { action: 'saveTokenOnly', error: 'Username and password are required.' });
 		}
 
+		const {
+			data: { user }
+		} = await supabase.auth.getUser();
+		if (!user) return fail(401, { action: 'saveTokenOnly', error: 'Not authenticated.' });
+
 		const result = await loginToIndy(username, password);
 		if ('error' in result)
 			return fail(400, {
 				action: 'saveTokenOnly',
 				error: 'Failed to connect to IndY. Please check your credentials and try again.'
 			});
-
-		const {
-			data: { user }
-		} = await supabase.auth.getUser();
-		if (!user) return fail(401, { action: 'saveTokenOnly', error: 'Not authenticated.' });
 
 		const { error: tokenError } = await supabase
 			.schema('private')
@@ -102,17 +102,17 @@ export const actions: Actions = {
 			});
 		}
 
+		const {
+			data: { user }
+		} = await supabase.auth.getUser();
+		if (!user) return fail(401, { action: 'saveCredentials', error: 'Not authenticated.' });
+
 		const result = await loginToIndy(username, password);
 		if ('error' in result)
 			return fail(400, {
 				action: 'saveCredentials',
 				error: 'Failed to connect to IndY. Please check your credentials and try again.'
 			});
-
-		const {
-			data: { user }
-		} = await supabase.auth.getUser();
-		if (!user) return fail(401, { action: 'saveCredentials', error: 'Not authenticated.' });
 
 		if (!PRIVATE_INDY_ENCRYPTION_KEY) {
 			return fail(500, {
