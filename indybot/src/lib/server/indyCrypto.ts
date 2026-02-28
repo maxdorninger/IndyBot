@@ -9,6 +9,12 @@ interface EncryptedPayload {
 }
 
 export function encrypt(text: string, keyHex: string): string {
+	if (typeof text !== 'string' || text.length === 0) {
+		throw new Error('Text to encrypt must be a non-empty string.');
+	}
+	if (typeof keyHex !== 'string' || keyHex.length !== 64) {
+		throw new Error('Key must be a 32-byte hex string (64 characters).');
+	}
 	const key = Buffer.from(keyHex, 'hex');
 	const iv = randomBytes(12);
 	const cipher = createCipheriv(ALG, key, iv);
@@ -23,7 +29,13 @@ export function encrypt(text: string, keyHex: string): string {
 }
 
 export function decrypt(encrypted: string, keyHex: string): string {
-	const { iv, ciphertext, authTag } = JSON.parse(encrypted) as EncryptedPayload;
+	let payload: EncryptedPayload;
+	try {
+		payload = JSON.parse(encrypted) as EncryptedPayload;
+	} catch {
+		throw new Error('Failed to decrypt payload');
+	}
+	const { iv, ciphertext, authTag } = payload;
 	const key = Buffer.from(keyHex, 'hex');
 	const decipher = createDecipheriv(ALG, key, Buffer.from(iv, 'base64'));
 	decipher.setAuthTag(Buffer.from(authTag, 'base64'));

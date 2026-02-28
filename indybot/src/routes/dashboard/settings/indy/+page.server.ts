@@ -61,7 +61,10 @@ export const actions: Actions = {
 
 		const result = await loginToIndy(username, password);
 		if ('error' in result)
-			return fail(400, { action: 'saveTokenOnly', error: 'Wrong credentials.' });
+			return fail(400, {
+				action: 'saveTokenOnly',
+				error: 'Failed to connect to IndY. Please check your credentials and try again.'
+			});
 
 		const {
 			data: { user }
@@ -101,7 +104,10 @@ export const actions: Actions = {
 
 		const result = await loginToIndy(username, password);
 		if ('error' in result)
-			return fail(400, { action: 'saveCredentials', error: 'Wrong credentials.' });
+			return fail(400, {
+				action: 'saveCredentials',
+				error: 'Failed to connect to IndY. Please check your credentials and try again.'
+			});
 
 		const {
 			data: { user }

@@ -51,9 +51,9 @@ export async function loginToIndy(
 		},
 		bodySerializer: (body) =>
 			new URLSearchParams(
-				Object.fromEntries(
-					Object.entries(body as Record<string, unknown>).filter(([, v]) => v != null)
-				) as Record<string, string>
+				Object.entries(body as Record<string, unknown>)
+					.filter(([, v]) => v != null)
+					.map(([k, v]): [string, string] => [k, String(v)])
 			).toString(),
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
 	});
