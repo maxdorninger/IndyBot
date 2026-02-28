@@ -18,6 +18,10 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const fullName = formData.get('full_name') as string;
 
+		if (!fullName || fullName.trim() === '') {
+			return fail(400, { action: 'updateProfile', error: 'Full name is required.' });
+		}
+
 		const { error } = await supabase.auth.updateUser({
 			data: { full_name: fullName }
 		});
@@ -29,6 +33,10 @@ export const actions: Actions = {
 	updateEmail: async ({ request, locals: { supabase }, url }) => {
 		const formData = await request.formData();
 		const email = formData.get('email') as string;
+
+		if (!email || email.trim() === '') {
+			return fail(400, { action: 'updateEmail', error: 'Email is required.' });
+		}
 
 		const { error } = await supabase.auth.updateUser(
 			{ email },
