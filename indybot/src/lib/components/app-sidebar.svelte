@@ -83,6 +83,10 @@
 						url: '/dashboard/settings'
 					},
 					{
+						title: 'IndY Connection',
+						url: '/dashboard/settings/indy'
+					},
+					{
 						title: 'Team',
 						url: '#'
 					},
