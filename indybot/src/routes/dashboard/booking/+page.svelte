@@ -149,8 +149,8 @@
 							{#if invalidCount > 0}
 								<p class="text-xs text-yellow-700 dark:text-yellow-400">
 									{invalidCount}
-									{invalidCount === 1 ? 'entry is' : 'entries are'} not (or no longer) valid, since the teacher is not
-									scheduled regularly for this slot.
+									{invalidCount === 1 ? 'entry is' : 'entries are'} not (or no longer) valid, since the
+									teacher is not scheduled regularly for this slot.
 								</p>
 							{/if}
 						</Card.Header>
@@ -190,7 +190,8 @@
 													<div
 														class="pl-5 text-xs font-medium text-yellow-700 dark:text-yellow-400"
 													>
-														This teacher is not or no longer scheduled regularly for this slot and will be skipped.
+														This teacher is not or no longer scheduled regularly for this slot and
+														will be skipped.
 													</div>
 												{/if}
 											</div>
