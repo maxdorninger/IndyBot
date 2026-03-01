@@ -1,8 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-
-export const DAYS = ['Mo', 'Mi', 'Fr'] as const;
-export const HOURS = [3, 4] as const;
+import { DAYS, HOURS } from '$lib/indyBooking';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 	const {

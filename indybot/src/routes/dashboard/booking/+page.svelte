@@ -7,7 +7,7 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import { enhance } from '$app/forms';
-	import { DAYS, HOURS } from './+page.server.ts';
+	import { DAYS, HOURS } from '$lib/indyBooking';
 
 	let { data, form } = $props();
 	const f = $derived(form as Record<string, unknown> | null);
@@ -143,10 +143,18 @@
 									<span class="text-xs font-medium text-green-600">{entries.length} entries</span>
 								{/if}
 							</div>
+							{@const invalidCount = entries.filter(
+								(e: { teacher: string }) => !isTeacherAvailable(e.teacher, day, hour)
+							).length}
+							{#if invalidCount > 0}
+								<p class="text-xs text-yellow-700 dark:text-yellow-400">
+									{invalidCount}
+									{invalidCount === 1 ? 'entry is' : 'entries are'} not (or no longer) valid, since the teacher is not
+									scheduled regularly for this slot.
+								</p>
+							{/if}
 						</Card.Header>
-
 						<Card.Content class="flex flex-col gap-3 pt-0">
-							<!-- Existing entries -->
 							{#if entries.length > 0}
 								<div class="flex flex-col gap-1.5">
 									{#each entries as entry (entry.id)}
@@ -178,6 +186,13 @@
 													{entry.activity}
 													<span class="ml-2 opacity-60">Priority {entry.priority}</span>
 												</div>
+												{#if !available}
+													<div
+														class="pl-5 text-xs font-medium text-yellow-700 dark:text-yellow-400"
+													>
+														This teacher is not or no longer scheduled regularly for this slot and will be skipped.
+													</div>
+												{/if}
 											</div>
 											<form method="POST" action="?/deleteEntry" use:enhance>
 												<input type="hidden" name="id" value={entry.id} />
