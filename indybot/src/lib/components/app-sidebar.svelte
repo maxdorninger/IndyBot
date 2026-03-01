@@ -1,33 +1,29 @@
 <script lang="ts" module>
 	import BookOpenIcon from '@lucide/svelte/icons/book-open';
 	import BotIcon from '@lucide/svelte/icons/bot';
+	import CalendarIcon from '@lucide/svelte/icons/calendar';
 	import ChartPieIcon from '@lucide/svelte/icons/chart-pie';
 	import FrameIcon from '@lucide/svelte/icons/frame';
 	import GalleryVerticalEndIcon from '@lucide/svelte/icons/gallery-vertical-end';
 	import MapIcon from '@lucide/svelte/icons/map';
 	import Settings2Icon from '@lucide/svelte/icons/settings-2';
-	import SquareTerminalIcon from '@lucide/svelte/icons/square-terminal';
 
 	// This is sample data.
 	const data = {
 		navMain: [
 			{
-				title: 'Playground',
+				title: 'IndY',
 				url: '#',
-				icon: SquareTerminalIcon,
+				icon: CalendarIcon,
 				isActive: true,
 				items: [
 					{
-						title: 'History',
-						url: '#'
+						title: 'Booking Preferences',
+						url: '/dashboard/booking'
 					},
 					{
-						title: 'Starred',
-						url: '#'
-					},
-					{
-						title: 'Settings',
-						url: '#'
+						title: 'Connection',
+						url: '/dashboard/settings/indy'
 					}
 				]
 			},
