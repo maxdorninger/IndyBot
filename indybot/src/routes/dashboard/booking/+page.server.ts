@@ -53,15 +53,29 @@ export const actions: Actions = {
 		const fd = await request.formData();
 		const day = fd.get('day') as string;
 		const hourValue = fd.get('hour');
-		const hour = hourValue !== null && hourValue !== '' ? Number(hourValue) : NaN;
+		const hour = Number(hourValue);
 		const teacher = fd.get('teacher') as string;
 		const subject = fd.get('subject') as string;
 		const activity = (fd.get('activity') as string)?.trim();
 		const priority = Number(fd.get('priority')) || 1;
 		const slotKey = `${day}-${hour}`;
+		const isValidDay = DAYS.includes(day as (typeof DAYS)[number]);
+		const isValidHour = HOURS.includes(hour as (typeof HOURS)[number]);
 
-		if (!day || Number.isNaN(hour) || !teacher || !subject || !activity) {
-			return fail(400, { action: 'addEntry', slotKey, error: 'All fields are required.' });
+		if (
+			!day ||
+			Number.isNaN(hour) ||
+			!teacher ||
+			!subject ||
+			!activity ||
+			!isValidDay ||
+			!isValidHour
+		) {
+			return fail(400, {
+				action: 'addEntry',
+				slotKey,
+				error: 'Missing required fields or invalid day/hour values.'
+			});
 		}
 
 		const { error } = await supabase.schema('private').from('booking_data').insert({
@@ -87,6 +101,10 @@ export const actions: Actions = {
 		const fd = await request.formData();
 		const id = Number(fd.get('id'));
 
+		if (Number.isNaN(id)) {
+			return fail(400, { action: 'deleteEntry', error: 'Invalid entry ID.' });
+		}
+
 		const { error } = await supabase
 			.schema('private')
 			.from('booking_data')
@@ -110,10 +128,10 @@ export const actions: Actions = {
 			return fail(400, { action: 'copyHour3ToHour4', day, error: 'Invalid day.' });
 		}
 
-		const { data: hour3, error: fetchError } = await supabase
+		const { data: hour3Entries, error: fetchError } = await supabase
 			.schema('private')
 			.from('booking_data')
-			.select('teacher, day, subject, activity, priority')
+			.select('teacher, subject, activity, priority')
 			.eq('user_id', user.id)
 			.eq('day', day)
 			.eq('hour', 3);
@@ -121,26 +139,16 @@ export const actions: Actions = {
 		if (fetchError)
 			return fail(500, { action: 'copyHour3ToHour4', day, error: fetchError.message });
 
-		const { error: deleteError } = await supabase
+		if (!hour3Entries?.length)
+			return fail(400, { action: 'copyHour3ToHour4', day, error: 'No Hour 3 entries to copy.' });
+
+		const { error: insertError } = await supabase
 			.schema('private')
 			.from('booking_data')
-			.delete()
-			.eq('user_id', user.id)
-			.eq('day', day)
-			.eq('hour', 4);
+			.insert(hour3Entries.map((e) => ({ ...e, user_id: user.id, day, hour: 4 })));
 
-		if (deleteError)
-			return fail(500, { action: 'copyHour3ToHour4', day, error: deleteError.message });
-
-		if (hour3?.length) {
-			const { error: insertError } = await supabase
-				.schema('private')
-				.from('booking_data')
-				.insert(hour3.map((e) => ({ ...e, user_id: user.id, hour: 4 })));
-
-			if (insertError)
-				return fail(500, { action: 'copyHour3ToHour4', day, error: insertError.message });
-		}
+		if (insertError)
+			return fail(500, { action: 'copyHour3ToHour4', day, error: insertError.message });
 
 		return { action: 'copyHour3ToHour4', day, success: true };
 	}

@@ -115,10 +115,10 @@
 				<div class="flex items-center gap-2">
 					<form method="POST" action="?/copyHour3ToHour4" use:enhance>
 						<input type="hidden" name="day" value={day} />
-						<Button type="submit" variant="outline" size="sm">Copy Hour 3 → Hour 4</Button>
+						<Button type="submit" variant="outline" size="sm">Add Hour 3 entries to Hour 4</Button>
 					</form>
 					{#if f?.action === 'copyHour3ToHour4' && f?.day === day && f?.success}
-						<p class="text-xs text-green-600">Hour 4 updated.</p>
+						<p class="text-xs text-green-600">Hour 3 entries added to Hour 4.</p>
 					{:else if f?.action === 'copyHour3ToHour4' && f?.day === day && f?.error}
 						<p class="text-xs text-destructive">{f.error}</p>
 					{/if}
