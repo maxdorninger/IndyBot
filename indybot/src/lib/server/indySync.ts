@@ -10,7 +10,7 @@ export type SyncResult = { ok: true; message: string } | { ok: false; error: str
  * Returns a 401 `Response` if invalid, or `null` if the request is authorised.
  */
 export function checkCronAuth(request: Request): Response | null {
-    if (!CRON_SECRET || !CRON_SECRET.trim()) {
+	if (!CRON_SECRET || !CRON_SECRET.trim()) {
 		return json({ error: 'Server misconfigured' }, { status: 500 });
 	}
 
