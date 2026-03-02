@@ -15,7 +15,7 @@ jobs:
       - name: Call sync endpoint
         run: |
           response=$(curl --silent --show-error --fail-with-body \
-            --max-time 30 \
+            --max-time 90 \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             "${{ secrets.APP_URL }}/api/cron/sync-indy")
           echo "$response"
