@@ -1,0 +1,26 @@
+name: Sync IndY Data
+
+on:
+  schedule:
+    # Runs daily at 12:00 UTC
+    - cron: '0 12 * * *'
+  # Allow manual trigger from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Sync teachers / hours / subjects / special_indy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call sync endpoint
+        run: |
+          response=$(curl --silent --show-error --fail-with-body \
+            --max-time 90 \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            "${{ secrets.APP_URL }}/api/cron/sync-indy")
+          echo "$response"
+          # Fail the job if the response contains any errors
+          if echo "$response" | grep -q '"ok":false'; then
+            echo "Sync reported errors — see response above."
+            exit 1
+          fi
