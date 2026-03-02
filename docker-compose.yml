@@ -1,0 +1,16 @@
+services:
+  indybot:
+    build:
+      context: ./indybot
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - PUBLIC_SUPABASE_URL=${PUBLIC_SUPABASE_URL}
+      - PUBLIC_SUPABASE_PUBLISHABLE_KEY=${PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+      - PRIVATE_SUPABASE_API_KEY=${PRIVATE_SUPABASE_API_KEY}
+      - PRIVATE_INDY_ENCRYPTION_KEY=${PRIVATE_INDY_ENCRYPTION_KEY}
+      - PUBLIC_INDY_API_URL=${PUBLIC_INDY_API_URL}
+    restart: unless-stopped
