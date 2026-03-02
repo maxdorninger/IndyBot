@@ -1,6 +1,6 @@
-import { INDY_SERVICE_USERNAME, INDY_SERVICE_PASSWORD, CRON_SECRET } from '$env/static/private';
+import { CRON_SECRET } from '$env/static/private';
 import { json } from '@sveltejs/kit';
-import { createIndyClient, loginToIndy } from '$lib/api/client.js';
+import { createIndyClient } from '$lib/api/client.js';
 import { supabaseAdmin } from '$lib/server/supabaseClient.js';
 
 export type SyncResult = { ok: true; message: string } | { ok: false; error: string };
@@ -17,48 +17,8 @@ export function checkCronAuth(request: Request): Response | null {
 	return null;
 }
 
-/** Obtain an authenticated IndY client. Shared by endpoints that need it (e.g. /teacher/). */
-export async function getAuthenticatedIndyClient() {
-	const result = await loginToIndy(INDY_SERVICE_USERNAME, INDY_SERVICE_PASSWORD);
-	if ('error' in result) return { error: result.error };
-	return { client: createIndyClient(result.data.access_token) };
-}
-
+/** Unauthenticated client — sufficient for all synced public endpoints. */
 export const publicIndyClient = createIndyClient();
-
-export async function syncTeachers(): Promise<SyncResult> {
-	const authResult = await getAuthenticatedIndyClient();
-	if ('error' in authResult) return { ok: false, error: `IndY login failed: ${authResult.error}` };
-
-	const { data, error: apiError } = await authResult.client.GET('/teacher/');
-	if (apiError) return { ok: false, error: String(apiError) };
-
-	const rows = (
-		data as {
-			tid: string;
-			firstname: string;
-			lastname: string;
-			username?: string;
-			email?: string;
-			areaofexpertise?: string;
-		}[]
-	).map((t) => ({
-		tid: t.tid,
-		firstname: t.firstname,
-		lastname: t.lastname,
-		username: t.username ?? null,
-		email: t.email ?? null,
-		area_of_expertise: t.areaofexpertise ?? null
-	}));
-
-	const { error } = await supabaseAdmin
-		.schema('private')
-		.from('teachers')
-		.upsert(rows, { onConflict: 'tid' });
-
-	if (error) return { ok: false, error: error.message };
-	return { ok: true, message: `${rows.length} rows upserted` };
-}
 
 export async function syncHours(): Promise<SyncResult> {
 	const { data, error: apiError } = await publicIndyClient.GET('/hour/');
