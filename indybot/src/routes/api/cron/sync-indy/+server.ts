@@ -1,13 +1,10 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { CRON_SECRET } from '$env/static/private';
-import { syncTeachers, syncHours, syncSubjects, syncSpecialIndy } from '$lib/server/indySync.js';
+import { syncTeachers, syncHours, syncSubjects, syncSpecialIndy, checkCronAuth } from '$lib/server/indySync.js';
 
 export const GET: RequestHandler = async ({ request }) => {
-	const authHeader = request.headers.get('Authorization');
-	if (!authHeader || authHeader !== `Bearer ${CRON_SECRET}`) {
-		return json({ error: 'Unauthorized' }, { status: 401 });
-	}
+	const authError = checkCronAuth(request);
+	if (authError) return authError;
 
 	const [teachers, hours, subjects, special_indy] = await Promise.all([
 		syncTeachers(),

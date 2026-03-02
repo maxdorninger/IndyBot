@@ -1,8 +1,21 @@
-import { INDY_SERVICE_USERNAME, INDY_SERVICE_PASSWORD } from '$env/static/private';
+import { INDY_SERVICE_USERNAME, INDY_SERVICE_PASSWORD, CRON_SECRET } from '$env/static/private';
+import { json } from '@sveltejs/kit';
 import { createIndyClient, loginToIndy } from '$lib/api/client.js';
 import { supabaseAdmin } from '$lib/server/supabaseClient.js';
 
 export type SyncResult = { ok: true; message: string } | { ok: false; error: string };
+
+/**
+ * Validates the `Authorization: Bearer <CRON_SECRET>` header.
+ * Returns a 401 `Response` if invalid, or `null` if the request is authorised.
+ */
+export function checkCronAuth(request: Request): Response | null {
+	const authHeader = request.headers.get('Authorization');
+	if (!authHeader || authHeader !== `Bearer ${CRON_SECRET}`) {
+		return json({ error: 'Unauthorized' }, { status: 401 });
+	}
+	return null;
+}
 
 /** Obtain an authenticated IndY client. Shared by endpoints that need it (e.g. /teacher/). */
 export async function getAuthenticatedIndyClient() {
