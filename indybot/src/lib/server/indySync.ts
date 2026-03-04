@@ -70,7 +70,11 @@ export async function syncHours(): Promise<SyncResult> {
 		area_of_expertise: h.area_of_expertise ?? null
 	}));
 
-	const { error: delError } = await supabaseAdmin.schema('private').from('hours').delete();
+	const { error: delError } = await supabaseAdmin
+		.schema('private')
+		.from('hours')
+		.delete()
+		.neq('id', 0);
 
 	if (delError) return { ok: false, error: `delete: ${delError.message}` };
 
